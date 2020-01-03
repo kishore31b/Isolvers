@@ -1,6 +1,7 @@
+currentBuild.displayName = "Artifactory - #"+currentBuild.number
 pipeline {
   agent any
-  stages {
+   stages {
       stage("CheckOut-SCM"){
           steps{
                       cleanWs()
@@ -18,7 +19,12 @@ pipeline {
        stage("Build"){
            steps{
                     sh label: '', script: 'mvn package'
-                    archive '**/*.war'
+                   }
+             }
+             
+             stage("archiveArtifacts"){
+           steps{
+                   archiveArtifacts '**/*.war'
                    }
              }
             
@@ -35,6 +41,22 @@ pipeline {
                     sh 'java -jar  /var/lib/jenkins/workspace/pipline/testing.jar'
                 }
             }
-     }        
-                   
- }
+                   stage('upload') {
+           steps {
+              script { 
+                 def server = Artifactory.server 'Artifactory-1'
+                 def uploadSpec = """{
+                    
+                   "files": [{
+                       "pattern": "**/*.war",
+                       "target": "maven-repo-artifactory"
+                       
+                    }]
+                 }"""
+                 
+                 server.upload(uploadSpec) 
+            }
+                   }
+           }
+    }
+}        
