@@ -65,5 +65,6 @@ pipeline {
         failure {  // notify users when the Pipeline fails
             mail(to: 'harireddy090@gmail.com', subject: "Failed Pipeline: ${currentBuild.fullDisplayName}", body: "Something is wrong with ${env.BUILD_URL}")  
         }
+      }
     }
 }        
