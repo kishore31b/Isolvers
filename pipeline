@@ -1,0 +1,18 @@
+pipeline{
+   agent any{
+   stages{
+    stage("echo printing"){
+       steps{
+       
+         echo "hello jenkins"
+       
+           }    
+    
+    
+    }
+   
+   }
+   
+   }
+}
+
